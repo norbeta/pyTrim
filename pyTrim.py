@@ -1,11 +1,10 @@
-#! /usr/bin/python3
-# Script for controlling G2 rPi-HAT from ProSim v1 generic TCP-driver
-# Script written by Mathias Nilsen <m@thias.no>
+#!/usr/bin/env python3
+# Script for controlling Pololi G2 rPi-HAT from ProSim v1 generic TCP-driver
+# Script written by Mathias Nilsen <m(a)thias.no>
+# Licence? Use if you want, but if you make it better or it is handy for your
+# project, please tell me. :-)
 
-# For communicatiotn with ProSim, use Generic TCP driver. For JRK connections,
-# use COM-ports. 
-#
-# Remember to set up gates for "Trim motor up" and "Trim motor down". 
+# 
 
 import socket
 import sys
@@ -14,6 +13,7 @@ import time
 import re
 from dual_g2_hpmd_rpi import motors, MAX_SPEED
 
+# This is the only thing you need to edit here.. 
 SERVER = '192.168.0.122'
 PORT = 8091
 
@@ -44,7 +44,7 @@ def connection(SERVER, PORT):
 	
 	while True:
 		try:
-			# Initialize socket to SERVE
+			# Initialize socket to SERVER
 			cs = "\033[1;33;40mInitializing..."
 			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			s.settimeout(30) # 30
@@ -132,7 +132,7 @@ def motorcontrol():
 			motors.motor1.enable()
 			motorstatus = "Enabled"
 			if trimmotor is "Up":
-				if trimspeed is not 480:
+				if trimspeed is not 480: # Give some boost if not max speed
 						motors.motor1.setSpeed(480)
 						motorspeed = 480
 						time.sleep(.2)
@@ -141,7 +141,7 @@ def motorcontrol():
 					motors.motor1.setSpeed(motorspeed)
 					time.sleep(.01)
 			elif trimmotor is "Down":
-				if trimspeed is not 480:
+				if trimspeed is not 480: # Give some boost if not max speed
 					motors.motor1.setSpeed(-480)
 					motorspeed = -480
 					time.sleep(.2)
